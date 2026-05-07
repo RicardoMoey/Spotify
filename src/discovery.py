@@ -118,6 +118,53 @@ def search_tracks_by_criteria(
     return collected[:limit]
 
 
+def collect_library_uris(sp: spotipy.Spotify) -> set[str]:
+    """Recolhe todos os URIs de faixas presentes nas playlists do utilizador.
+
+    Usa o parâmetro fields para pedir apenas URIs, minimizando o payload.
+    Playlists inacessíveis (403) são ignoradas com aviso.
+
+    Args:
+        sp: Cliente Spotify autenticado.
+
+    Returns:
+        Conjunto de URIs de faixas (spotify:track:…) encontrados na biblioteca.
+    """
+    playlists = list_user_playlists(sp)
+    logger.info("A indexar URIs de %d playlist(s)...", len(playlists))
+
+    known: set[str] = set()
+
+    for pl in playlists:
+        offset = 0
+        while True:
+            try:
+                response = sp.playlist_items(
+                    pl.id,
+                    fields="items(item(uri),track(uri)),next",
+                    limit=50,
+                    offset=offset,
+                )
+            except spotipy.SpotifyException as exc:
+                logger.warning("Sem acesso a '%s' (ignorada): HTTP %s", pl.name, exc.http_status)
+                break
+
+            for entry in response.get("items") or []:
+                track = entry.get("item") or entry.get("track")
+                if not track:
+                    continue
+                uri = track.get("uri", "")
+                if uri.startswith("spotify:track:"):
+                    known.add(uri)
+
+            if not response.get("next"):
+                break
+            offset += 50
+
+    logger.info("%d URIs indexados na biblioteca.", len(known))
+    return known
+
+
 def analyze_library_genres(sp: spotipy.Spotify) -> dict[str, int]:
     """Analisa a biblioteca do utilizador e devolve artistas por frequência.
 

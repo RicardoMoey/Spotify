@@ -9,12 +9,13 @@ import sys
 import spotipy
 
 from src.auth import get_client
-from src.discovery import analyze_library_genres, search_tracks_by_criteria
+from src.discovery import analyze_library_genres, collect_library_uris, search_tracks_by_criteria
 from src.playlists import create_and_populate
 
 logging.basicConfig(level=logging.INFO, format="  %(message)s")
 # Silencia os logs verbosos de HTTP do spotipy (erros 4xx/5xx)
 logging.getLogger("spotipy.client").setLevel(logging.CRITICAL)
+logger = logging.getLogger(__name__)
 
 
 def cmd_genres(sp: spotipy.Spotify) -> None:
@@ -108,6 +109,33 @@ def cmd_generate(sp: spotipy.Spotify, args: argparse.Namespace) -> None:
         )
         sys.exit(0)
 
+    if args.exclude_known:
+        print("A indexar biblioteca para exclusão de duplicados...")
+        try:
+            known_uris = collect_library_uris(sp)
+        except spotipy.SpotifyException as exc:
+            print(f"Erro ao ler biblioteca: {exc}", file=sys.stderr)
+            sys.exit(1)
+
+        before = len(tracks)
+        tracks = [t for t in tracks if t["uri"] not in known_uris]
+        excluded = before - len(tracks)
+        logger.info(
+            "%d track(s) excluída(s) (já presentes na biblioteca), %d track(s) novas",
+            excluded, len(tracks),
+        )
+        print(f"  {excluded} excluída(s) (já na biblioteca), {len(tracks)} nova(s).\n")
+
+        if not tracks:
+            print("Nenhuma faixa nova encontrada. Tenta alargar os critérios.")
+            sys.exit(0)
+
+        if len(tracks) < args.size:
+            print(
+                f"Aviso: apenas {len(tracks)} faixa(s) novas disponíveis "
+                f"(pediste {args.size}). A prosseguir com o que há.\n"
+            )
+
     print(f"{len(tracks)} faixa(s) encontrada(s). Pré-visualização:\n")
     print(f"{'#':<4} {'Nome':<40} {'Artistas':<26} {'Ano':>4} {'Pop':>4}")
     print("-" * 82)
@@ -191,6 +219,12 @@ def main() -> None:
     gen.add_argument("--name", required=True, help="Nome da playlist a criar")
     gen.add_argument("--description", default="", help="Descrição da playlist")
     gen.add_argument("--public", action="store_true", help="Torna a playlist pública")
+    gen.add_argument(
+        "--exclude-known",
+        action="store_true",
+        dest="exclude_known",
+        help="Remove faixas já presentes nalguma playlist da biblioteca",
+    )
 
     args = parser.parse_args()
     sp = get_client()
