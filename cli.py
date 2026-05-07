@@ -5,8 +5,10 @@ from __future__ import annotations
 import argparse
 import logging
 import sys
+from typing import Any
 
 import spotipy
+import yaml
 
 from src.auth import get_client
 from src.discovery import analyze_library_genres, collect_library_uris, search_tracks_by_criteria
@@ -178,6 +180,134 @@ def cmd_generate(sp: spotipy.Spotify, args: argparse.Namespace) -> None:
     print(f"  URI:     {playlist.uri}")
 
 
+def _run_entry(
+    sp: spotipy.Spotify,
+    slug: str,
+    conf: dict[str, Any],
+    index: int,
+    total: int,
+    known_uris: set[str] | None,
+) -> None:
+    """Processa uma entrada do ficheiro YAML e cria a playlist correspondente."""
+    name: str = conf.get("name") or slug.replace("_", " ")
+    genres: list[str] | None = conf.get("genres") or None
+    years: list[int] | None = conf.get("years")
+    popularity: list[int] | None = conf.get("popularity")
+    size: int = int(conf.get("size", 30))
+    exclude_known: bool = bool(conf.get("exclude_known", False))
+    public: bool = bool(conf.get("public", False))
+    description: str = conf.get("description", "")
+
+    year_range: tuple[int, int] | None = (int(years[0]), int(years[1])) if years else None
+    popularity_range: tuple[int, int] | None = (int(popularity[0]), int(popularity[1])) if popularity else None
+
+    print(f"[{index}/{total}] \"{name}\"")
+
+    try:
+        tracks = search_tracks_by_criteria(
+            sp,
+            genres=genres,
+            year_range=year_range,
+            popularity_range=popularity_range,
+            limit=size,
+        )
+    except (ValueError, spotipy.SpotifyException) as exc:
+        print(f"  Erro na pesquisa: {exc}\n")
+        return
+
+    if not tracks:
+        print("  Nenhuma faixa encontrada — a saltar.\n")
+        return
+
+    if exclude_known and known_uris is not None:
+        before = len(tracks)
+        tracks = [t for t in tracks if t["uri"] not in known_uris]
+        excluded = before - len(tracks)
+        logger.info("%d excluída(s) (já na biblioteca), %d nova(s)", excluded, len(tracks))
+        print(f"  {excluded} excluída(s) (já na biblioteca), {len(tracks)} nova(s).")
+
+        if not tracks:
+            print("  Nenhuma faixa nova — a saltar.\n")
+            return
+        if len(tracks) < size:
+            print(f"  Aviso: só {len(tracks)} faixa(s) novas (pediste {size}).")
+
+    print(f"  {len(tracks)} faixa(s). Primeiras 5:")
+    for t in tracks[:5]:
+        artists = ", ".join(t["artists"])[:32]
+        print(f"    {t['name'][:42]}  —  {artists}  ({t['release_year']})")
+
+    print(f"\n  Criar \"{name}\" com {len(tracks)} faixa(s)? [y/N/a] ", end="", flush=True)
+    try:
+        answer = input().strip().lower()
+    except (EOFError, KeyboardInterrupt):
+        print("\nInterrompido.")
+        raise SystemExit(0)
+
+    if answer == "a":
+        print("Abandonado.")
+        raise SystemExit(0)
+    if answer != "y":
+        print("  Saltado.\n")
+        return
+
+    try:
+        playlist = create_and_populate(
+            sp,
+            name=name,
+            track_uris=[t["uri"] for t in tracks],
+            description=description,
+            public=public,
+        )
+    except spotipy.SpotifyException as exc:
+        print(f"  Erro ao criar playlist: {exc}\n")
+        return
+
+    # Actualiza known_uris para evitar duplicados entre playlists do mesmo batch
+    if known_uris is not None:
+        for t in tracks:
+            known_uris.add(t["uri"])
+
+    print(f"  Criada: {playlist.name}  ({playlist.track_count} faixas)  {playlist.uri}\n")
+
+
+def cmd_batch(sp: spotipy.Spotify, args: argparse.Namespace) -> None:
+    """Gera playlists em lote a partir de um ficheiro YAML."""
+    try:
+        with open(args.file) as f:
+            config: dict[str, Any] = yaml.safe_load(f)
+    except OSError as exc:
+        print(f"Não foi possível abrir '{args.file}': {exc}", file=sys.stderr)
+        sys.exit(1)
+    except yaml.YAMLError as exc:
+        print(f"Erro ao interpretar YAML: {exc}", file=sys.stderr)
+        sys.exit(1)
+
+    if not isinstance(config, dict) or not config:
+        print("Ficheiro YAML vazio ou inválido.", file=sys.stderr)
+        sys.exit(1)
+
+    entries = list(config.items())
+    total = len(entries)
+    print(f"{total} playlist(s) configurada(s).\n")
+
+    # Recolhe URIs conhecidos uma só vez se alguma entrada usar exclude_known
+    known_uris: set[str] | None = None
+    if any(v.get("exclude_known") for v in config.values()):
+        print("A indexar biblioteca (usada em exclude_known)...")
+        try:
+            known_uris = collect_library_uris(sp)
+        except spotipy.SpotifyException as exc:
+            print(f"Erro ao indexar biblioteca: {exc}", file=sys.stderr)
+            sys.exit(1)
+        print(f"  {len(known_uris)} URIs indexados.\n")
+
+    for i, (slug, conf) in enumerate(entries, start=1):
+        _run_entry(sp, slug, conf, i, total, known_uris)
+
+    print("Batch concluído.")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         prog="cli.py",
@@ -216,7 +346,7 @@ def main() -> None:
         metavar="N",
         help="Número de faixas a incluir (padrão: 30)",
     )
-    gen.add_argument("--name", required=True, help="Nome da playlist a criar")
+    gen.add_argument("--name", required=True, help="Nome da playlist a criar (obrigatório)")
     gen.add_argument("--description", default="", help="Descrição da playlist")
     gen.add_argument("--public", action="store_true", help="Torna a playlist pública")
     gen.add_argument(
@@ -226,6 +356,17 @@ def main() -> None:
         help="Remove faixas já presentes nalguma playlist da biblioteca",
     )
 
+    batch = subparsers.add_parser(
+        "batch",
+        help="Gera playlists em lote a partir de ficheiro YAML",
+    )
+    batch.add_argument(
+        "file",
+        nargs="?",
+        default="playlists.yml",
+        help="Ficheiro YAML de configuração (padrão: playlists.yml)",
+    )
+
     args = parser.parse_args()
     sp = get_client()
 
@@ -233,6 +374,8 @@ def main() -> None:
         cmd_genres(sp)
     elif args.command == "generate":
         cmd_generate(sp, args)
+    elif args.command == "batch":
+        cmd_batch(sp, args)
 
 
 if __name__ == "__main__":

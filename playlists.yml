@@ -1,0 +1,18 @@
+experimental_hh_discovery:
+  genres: [experimental hip hop, abstract hip hop]
+  years: [2018, 2025]
+  popularity: [15, 55]
+  size: 25
+  exclude_known: true
+
+trekking_madeira:
+  genres: [post-rock, ambient, downtempo]
+  years: [2010, 2025]
+  popularity: [20, 70]
+  size: 40
+
+snowboard_energy:
+  genres: [breakbeat, electronic, big beat]
+  years: [2015, 2025]
+  popularity: [30, 80]
+  size: 50
