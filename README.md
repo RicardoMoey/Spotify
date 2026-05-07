@@ -1,43 +1,71 @@
 # spotify-playlists
 
-Automatiza playlists do Spotify com Python e [spotipy](https://spotipy.readthedocs.io/).
+Automatiza criação e gestão de playlists no Spotify via CLI.
 
 ## Setup
 
-### 1. Credenciais Spotify
-
-1. Acede ao [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
-2. Cria uma aplicação e copia o **Client ID** e **Client Secret**
-3. Adiciona `http://localhost:8888/callback` como Redirect URI
-
-### 2. Variáveis de ambiente
-
 ```bash
-cp .env.example .env
-# edita .env com as tuas credenciais
-```
-
-### 3. Ambiente virtual e dependências
-
-```bash
+git clone https://github.com/RicardoMoey/Spotify.git
+cd Spotify
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+cp .env.example .env
 ```
 
-## Uso
+Edita `.env` com as tuas credenciais:
+
+```
+SPOTIPY_CLIENT_ID=...
+SPOTIPY_CLIENT_SECRET=...
+SPOTIPY_REDIRECT_URI=http://127.0.0.1:8888/callback
+```
+
+## Registo da app Spotify
+
+1. Abre o [Spotify Developer Dashboard](https://developer.spotify.com/dashboard) e cria uma app
+2. Em *Settings → Redirect URIs* adiciona exactamente: `http://127.0.0.1:8888/callback`
+3. Copia o *Client ID* e *Client Secret* para `.env`
+
+Na primeira execução o browser abre para autorização OAuth. O token fica em cache em `.cache`.
+
+## Comandos
 
 ```bash
-python main.py
+# Artistas mais frequentes na biblioteca + géneros sugeridos
+python cli.py genres
+
+# Gerar uma playlist por critérios
+python cli.py generate \
+  --genres "dub,reggae" \
+  --years 1970-2000 \
+  --popularity 10-70 \
+  --size 30 \
+  --name "Dub Clássico" \
+  --exclude-known        # omite faixas já em qualquer playlist
+
+# Gerar várias playlists a partir de ficheiro YAML
+python cli.py batch                  # usa playlists.yml
+python cli.py batch outro.yml
 ```
 
-Na primeira execução abrirá o browser para autorização. O token fica em cache em `.cache`.
+## playlists.yml
 
-## Estrutura
+```yaml
+slug_da_playlist:            # usado como nome se 'name' omitido
+  name: "Nome no Spotify"    # opcional
+  genres: [post-rock, ambient]
+  years: [2010, 2025]
+  popularity: [20, 70]       # opcional (0–100)
+  size: 40
+  exclude_known: true        # opcional, padrão false
+  public: false              # opcional, padrão false
+  description: "..."         # opcional
+```
 
-```
-src/
-  auth.py       # OAuth — get_client()
-  playlists.py  # Dataclass Playlist + CRUD helpers
-main.py         # Ponto de entrada
-```
+O campo `exclude_known` indexa a biblioteca uma vez por sessão e reutiliza o índice em todos os entries do mesmo batch.
+
+## Troubleshooting
+
+Erros 403, campos ausentes ou comportamentos inesperados da API Spotify:
+→ [`docs/spotify-api-changes.md`](docs/spotify-api-changes.md)
