@@ -52,16 +52,17 @@ python cli.py batch outro.yml
 ## playlists.yml
 
 ```yaml
-slug_da_playlist:            # usado como nome se 'name' omitido
-  name: "Nome no Spotify"    # opcional
+- name: "Nome no Spotify"          # obrigatório no formato lista
   genres: [post-rock, ambient]
-  years: [2010, 2025]
-  popularity: [20, 70]       # opcional (0–100)
-  size: 40
-  exclude_known: true        # opcional, padrão false
-  public: false              # opcional, padrão false
-  description: "..."         # opcional
+  years: 2010-2025                 # ou [2010, 2025]
+  popularity: 20-70                # opcional (0–100), ou [20, 70]
+  size: 40                         # ou count: 40
+  exclude_known: true              # opcional, padrão false
+  public: false                    # opcional, padrão false
+  description: "..."               # opcional
 ```
+
+Formato alternativo (mapa com slug): `slug_da_playlist: {genres: [...], ...}` — o slug é usado como nome se `name` for omitido.
 
 O campo `exclude_known` indexa a biblioteca uma vez por sessão e reutiliza o índice em todos os entries do mesmo batch.
 

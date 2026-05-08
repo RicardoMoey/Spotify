@@ -1,18 +1,32 @@
-experimental_hh_discovery:
+- name: experimental hh discovery
   genres: [experimental hip hop, abstract hip hop]
-  years: [2018, 2025]
-  popularity: [15, 55]
+  years: 2018-2025
+  popularity: 15-55
   size: 25
   exclude_known: true
 
-trekking_madeira:
+- name: trekking madeira
   genres: [post-rock, ambient, downtempo]
-  years: [2010, 2025]
-  popularity: [20, 70]
+  years: 2010-2025
+  popularity: 20-70
   size: 40
 
-snowboard_energy:
+- name: snowboard energy
   genres: [breakbeat, electronic, big beat]
-  years: [2015, 2025]
-  popularity: [30, 80]
+  years: 2015-2025
+  popularity: 30-80
   size: 50
+
+- name: "Madalena — Indie/Art Rock Discovery"
+  genres: [indie rock, art rock, alternative rock, post-rock, dream pop]
+  years: 2021-2026
+  popularity: 30-65
+  count: 15
+  exclude_known: true
+
+- name: "Madalena — Alt Hip Hop Discovery"
+  genres: [experimental hip hop, alternative hip hop, art pop]
+  years: 2021-2026
+  popularity: 30-65
+  count: 10
+  exclude_known: true

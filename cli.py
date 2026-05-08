@@ -20,6 +20,16 @@ logging.getLogger("spotipy.client").setLevel(logging.CRITICAL)
 logger = logging.getLogger(__name__)
 
 
+def _parse_int_range(value: Any) -> tuple[int, int] | None:
+    """Converte lista [a, b] ou string 'a-b' num tuplo (a, b)."""
+    if value is None:
+        return None
+    if isinstance(value, (list, tuple)):
+        return (int(value[0]), int(value[1]))
+    lo, sep, hi = str(value).partition("-")
+    return (int(lo), int(hi)) if sep else None
+
+
 def cmd_genres(sp: spotipy.Spotify) -> None:
     """Mostra os artistas mais frequentes e sugere géneros para usar em 'generate'."""
     from src.playlists import list_user_playlists
@@ -182,24 +192,20 @@ def cmd_generate(sp: spotipy.Spotify, args: argparse.Namespace) -> None:
 
 def _run_entry(
     sp: spotipy.Spotify,
-    slug: str,
     conf: dict[str, Any],
     index: int,
     total: int,
     known_uris: set[str] | None,
 ) -> None:
     """Processa uma entrada do ficheiro YAML e cria a playlist correspondente."""
-    name: str = conf.get("name") or slug.replace("_", " ")
+    name: str = conf.get("name") or f"playlist {index}"
     genres: list[str] | None = conf.get("genres") or None
-    years: list[int] | None = conf.get("years")
-    popularity: list[int] | None = conf.get("popularity")
-    size: int = int(conf.get("size", 30))
+    size: int = int(conf.get("size") or conf.get("count") or 30)  # count é alias de size
+    year_range = _parse_int_range(conf.get("years"))
+    popularity_range = _parse_int_range(conf.get("popularity"))
     exclude_known: bool = bool(conf.get("exclude_known", False))
     public: bool = bool(conf.get("public", False))
     description: str = conf.get("description", "")
-
-    year_range: tuple[int, int] | None = (int(years[0]), int(years[1])) if years else None
-    popularity_range: tuple[int, int] | None = (int(popularity[0]), int(popularity[1])) if popularity else None
 
     print(f"[{index}/{total}] \"{name}\"")
 
@@ -283,17 +289,25 @@ def cmd_batch(sp: spotipy.Spotify, args: argparse.Namespace) -> None:
         print(f"Erro ao interpretar YAML: {exc}", file=sys.stderr)
         sys.exit(1)
 
-    if not isinstance(config, dict) or not config:
-        print("Ficheiro YAML vazio ou inválido.", file=sys.stderr)
+    # Suporta formato lista ([{...}, ...]) e formato mapa ({slug: {...}, ...})
+    if isinstance(config, list):
+        entries: list[dict[str, Any]] = config
+    elif isinstance(config, dict):
+        entries = [{"name": slug.replace("_", " "), **conf} for slug, conf in config.items()]
+    else:
+        print("Ficheiro YAML inválido (esperado lista ou mapa no topo).", file=sys.stderr)
         sys.exit(1)
 
-    entries = list(config.items())
+    if not entries:
+        print("Ficheiro YAML sem entradas.", file=sys.stderr)
+        sys.exit(1)
+
     total = len(entries)
     print(f"{total} playlist(s) configurada(s).\n")
 
     # Recolhe URIs conhecidos uma só vez se alguma entrada usar exclude_known
     known_uris: set[str] | None = None
-    if any(v.get("exclude_known") for v in config.values()):
+    if any(e.get("exclude_known") for e in entries):
         print("A indexar biblioteca (usada em exclude_known)...")
         try:
             known_uris = collect_library_uris(sp)
@@ -302,8 +316,8 @@ def cmd_batch(sp: spotipy.Spotify, args: argparse.Namespace) -> None:
             sys.exit(1)
         print(f"  {len(known_uris)} URIs indexados.\n")
 
-    for i, (slug, conf) in enumerate(entries, start=1):
-        _run_entry(sp, slug, conf, i, total, known_uris)
+    for i, conf in enumerate(entries, start=1):
+        _run_entry(sp, conf, i, total, known_uris)
 
     print("Batch concluído.")
 
