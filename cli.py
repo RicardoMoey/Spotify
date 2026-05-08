@@ -302,6 +302,13 @@ def cmd_batch(sp: spotipy.Spotify, args: argparse.Namespace) -> None:
         print("Ficheiro YAML sem entradas.", file=sys.stderr)
         sys.exit(1)
 
+    if args.only:
+        needle = args.only.lower()
+        entries = [e for e in entries if needle in (e.get("name") or "").lower()]
+        if not entries:
+            print(f"Nenhuma entrada encontrada com nome a conter '{args.only}'.", file=sys.stderr)
+            sys.exit(1)
+
     total = len(entries)
     print(f"{total} playlist(s) configurada(s).\n")
 
@@ -379,6 +386,12 @@ def main() -> None:
         nargs="?",
         default="playlists.yml",
         help="Ficheiro YAML de configuração (padrão: playlists.yml)",
+    )
+    batch.add_argument(
+        "--only",
+        metavar="NOME",
+        default=None,
+        help="Processa apenas a(s) entrada(s) cujo nome contenha este texto (case-insensitive)",
     )
 
     args = parser.parse_args()
