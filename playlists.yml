@@ -30,3 +30,24 @@
   popularity: 30-65
   count: 10
   exclude_known: true
+
+- name: "Tomás — Melodic Trap Discovery"
+  genres: [trap, melodic rap, rage]
+  years: 2022-2026
+  popularity: 35-70
+  count: 12
+  exclude_known: true
+
+- name: "Tomás — West Coast Chill Discovery"
+  genres: [west coast hip hop, jazz rap, conscious hip hop]
+  years: 2021-2026
+  popularity: 30-65
+  count: 10
+  exclude_known: true
+
+- name: "Tomás — Griselda / Underground Boom Bap"
+  genres: [underground hip hop, boom bap, east coast hip hop]
+  years: 2020-2026
+  popularity: 25-60
+  count: 12
+  exclude_known: true
