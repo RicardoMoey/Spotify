@@ -1,0 +1,138 @@
+{
+  "name": "Férias em Família 2026 🌴",
+  "description": "6 horas de estrada, praia e noite: hip-hop do filho, indie da filha, rock e trip-hop do Ricardo, e pontes inesperadas entre os três mundos.",
+  "public": false,
+  "blocks": [
+    {
+      "title": "Bloco 1 — Motores a trabalhar",
+      "tracks": [
+        { "artist": "Outkast", "title": "The Whole World", "for": "ponte", "note": "Outkast com Killer Mike: o pai e o filho na mesma faixa" },
+        { "artist": "Kendrick Lamar", "title": "King Kunta", "for": "filho" },
+        { "artist": "Fontaines D.C.", "title": "Boys in the Better Land", "for": "ricardo" },
+        { "artist": "TV Girl", "title": "Lovers Rock", "for": "filha" },
+        { "artist": "Playboi Carti", "title": "Magnolia", "for": "filho" },
+        { "artist": "Jungle", "title": "Busy Earnin'", "for": "surpresa", "note": "funk solar que agrada às três gerações" },
+        { "artist": "Faith No More", "title": "Epic", "for": "ricardo" },
+        { "artist": "Buraka Som Sistema", "title": "Hangover (BaBaBa)", "for": "surpresa", "note": "Lisboa a abrir as férias" },
+        { "artist": "Joey Bada$$", "title": "Devastated", "for": "filho" },
+        { "artist": "Alvvays", "title": "Archie, Marry Me", "for": "surpresa", "note": "para quem gosta de TV Girl" },
+        { "artist": "Run The Jewels", "title": "Legend Has It", "for": "ricardo", "note": "Killer Mike com El-P" },
+        { "artist": "Radiohead", "title": "15 Step", "for": "filha" }
+      ]
+    },
+    {
+      "title": "Bloco 2 — Janela aberta",
+      "tracks": [
+        { "artist": "Khruangbin", "title": "Time (You and I)", "for": "surpresa", "note": "groove de estrada, consenso garantido" },
+        { "artist": "Anderson .Paak", "title": "Come Down", "for": "surpresa" },
+        { "artist": "Westside Gunn", "title": "327", "for": "filho", "note": "com Joey Bada$$ e Tyler — dois favoritos numa faixa" },
+        { "artist": "Tame Impala", "title": "The Less I Know The Better", "for": "surpresa" },
+        { "artist": "TV Girl", "title": "Not Allowed", "for": "filha" },
+        { "artist": "Kendrick Lamar", "title": "LOVE. FEAT. ZACARI.", "for": "filho" },
+        { "artist": "A Tribe Called Quest", "title": "Can I Kick It?", "for": "surpresa", "note": "as raízes de Joey Bada$$" },
+        { "artist": "Soundgarden", "title": "Spoonman", "for": "ricardo" },
+        { "artist": "Sam The Kid", "title": "Não Percebes", "for": "surpresa", "note": "clássico do rap tuga, na linha de Allen Halloween" },
+        { "artist": "Steve Lacy", "title": "Bad Habit", "for": "surpresa" },
+        { "artist": "Fontaines D.C.", "title": "Jackie Down The Line", "for": "ricardo" },
+        { "artist": "Playboi Carti", "title": "Sky", "for": "filho" }
+      ]
+    },
+    {
+      "title": "Bloco 3 — Toalha na areia",
+      "tracks": [
+        { "artist": "Beach House", "title": "Space Song", "for": "surpresa" },
+        { "artist": "Mac DeMarco", "title": "Chamber Of Reflection", "for": "surpresa" },
+        { "artist": "Radiohead", "title": "No Surprises", "for": "filha" },
+        { "artist": "Men I Trust", "title": "Show Me How", "for": "surpresa" },
+        { "artist": "Frank Ocean", "title": "Pink + White", "for": "surpresa" },
+        { "artist": "TV Girl", "title": "Cigarettes out the Window", "for": "filha" },
+        { "artist": "Mild High Club", "title": "Some Feeling", "for": "surpresa" },
+        { "artist": "Vansire", "title": "From the Subway Train", "for": "surpresa", "note": "o irmão espiritual de TV Girl" },
+        { "artist": "Clairo", "title": "Bags", "for": "surpresa" },
+        { "artist": "Mazzy Star", "title": "Fade Into You", "for": "surpresa" },
+        { "artist": "Unknown Mortal Orchestra", "title": "Hunnybee", "for": "surpresa" },
+        { "artist": "Tyler, The Creator", "title": "See You Again", "for": "surpresa", "note": "ponte entre o rap do filho e o pop da filha" }
+      ]
+    },
+    {
+      "title": "Bloco 4 — Cypher de família",
+      "tracks": [
+        { "artist": "Kendrick Lamar", "title": "Money Trees", "for": "filho" },
+        { "artist": "Freddie Gibbs", "title": "Crime Pays", "for": "surpresa", "note": "Madlib ao sol — vizinho de Westside Gunn" },
+        { "artist": "Joey Bada$$", "title": "Paper Trail$", "for": "filho" },
+        { "artist": "Madvillain", "title": "All Caps", "for": "surpresa", "note": "MF DOOM, leitura obrigatória" },
+        { "artist": "Mos Def", "title": "Ms. Fat Booty", "for": "surpresa" },
+        { "artist": "Westside Gunn", "title": "Michael Irvin", "for": "filho" },
+        { "artist": "Little Simz", "title": "Woman", "for": "surpresa" },
+        { "artist": "Allen Halloween", "title": "Josué", "for": "filho" },
+        { "artist": "Valete", "title": "Anti-Herói", "for": "surpresa", "note": "rap tuga de peso" },
+        { "artist": "Killer Mike", "title": "Run", "for": "ricardo", "note": "com Young Thug" },
+        { "artist": "Baby Keem", "title": "family ties (with Kendrick Lamar)", "for": "filho" },
+        { "artist": "Denzel Curry", "title": "Walkin", "for": "surpresa" },
+        { "artist": "Playboi Carti", "title": "Shoota", "for": "filho" }
+      ]
+    },
+    {
+      "title": "Bloco 5 — Pôr do sol",
+      "tracks": [
+        { "artist": "Massive Attack", "title": "Unfinished Sympathy", "for": "surpresa", "note": "a banda onde Tricky começou" },
+        { "artist": "Tricky", "title": "Hell Is Round the Corner", "for": "ricardo" },
+        { "artist": "Portishead", "title": "Glory Box", "for": "surpresa" },
+        { "artist": "Massive Attack", "title": "Karmacoma", "for": "ricardo", "note": "com o próprio Tricky" },
+        { "artist": "Tricky", "title": "Overcome", "for": "ricardo" },
+        { "artist": "Gorillaz", "title": "On Melancholy Hill", "for": "surpresa" },
+        { "artist": "Radiohead", "title": "Reckoner", "for": "filha" },
+        { "artist": "Cocteau Twins", "title": "Cherry-coloured Funk", "for": "surpresa" },
+        { "artist": "Dino d'Santiago", "title": "Nova Lisboa", "for": "surpresa" },
+        { "artist": "Morcheeba", "title": "The Sea", "for": "surpresa", "note": "trip-hop feito para férias" },
+        { "artist": "TV Girl", "title": "Taking What's Not Yours", "for": "filha" }
+      ]
+    },
+    {
+      "title": "Bloco 6 — Fogueira elétrica",
+      "tracks": [
+        { "artist": "Soundgarden", "title": "Black Hole Sun", "for": "ricardo" },
+        { "artist": "Faith No More", "title": "Midlife Crisis", "for": "ricardo" },
+        { "artist": "Temple Of The Dog", "title": "Hunger Strike", "for": "surpresa", "note": "Chris Cornell + Eddie Vedder" },
+        { "artist": "Queens of the Stone Age", "title": "Go With The Flow", "for": "surpresa" },
+        { "artist": "Beastie Boys", "title": "Sabotage", "for": "surpresa", "note": "rap e rock em guerra aberta — todos ganham" },
+        { "artist": "IDLES", "title": "Danny Nedelko", "for": "surpresa", "note": "punk alegre para fãs de Fontaines D.C." },
+        { "artist": "Fontaines D.C.", "title": "Starburster", "for": "ricardo" },
+        { "artist": "shame", "title": "One Rizla", "for": "surpresa" },
+        { "artist": "Faith No More", "title": "Easy", "for": "ricardo", "note": "singalong obrigatório no carro" },
+        { "artist": "Soundgarden", "title": "Fell On Black Days", "for": "ricardo" },
+        { "artist": "Peeping Tom", "title": "Mojave", "for": "surpresa", "note": "Mike Patton em modo praia — o inusitado da lista" },
+        { "artist": "Alice In Chains", "title": "Would?", "for": "surpresa" },
+        { "artist": "Radiohead", "title": "Karma Police", "for": "filha" }
+      ]
+    },
+    {
+      "title": "Bloco 7 — Última volta",
+      "tracks": [
+        { "artist": "Run The Jewels", "title": "ooh la la", "for": "ricardo" },
+        { "artist": "Kendrick Lamar", "title": "Alright", "for": "filho" },
+        { "artist": "Gorillaz", "title": "Feel Good Inc.", "for": "surpresa" },
+        { "artist": "Playboi Carti", "title": "Location", "for": "filho" },
+        { "artist": "Joey Bada$$", "title": "Temptation", "for": "filho" },
+        { "artist": "Allen Halloween", "title": "Mary Witch", "for": "filho" },
+        { "artist": "Capicua", "title": "Vayorken", "for": "surpresa" },
+        { "artist": "TV Girl", "title": "Blue", "for": "filha" },
+        { "artist": "Alvvays", "title": "Dreams Tonite", "for": "surpresa" }
+      ]
+    },
+    {
+      "title": "Bloco 8 — Noite dentro",
+      "tracks": [
+        { "artist": "Killer Mike", "title": "Scientists & Engineers", "for": "ricardo", "note": "com André 3000" },
+        { "artist": "Fontaines D.C.", "title": "I Love You", "for": "ricardo" },
+        { "artist": "Westside Gunn", "title": "Allah Sent Me", "for": "filho" },
+        { "artist": "Grizzly Bear", "title": "Two Weeks", "for": "surpresa" },
+        { "artist": "Tricky", "title": "Black Steel", "for": "ricardo" },
+        { "artist": "Soundgarden", "title": "Burden In My Hand", "for": "ricardo" },
+        { "artist": "Radiohead", "title": "Weird Fishes/ Arpeggi", "for": "filha" },
+        { "artist": "Kendrick Lamar", "title": "luther (with sza)", "for": "filho" },
+        { "artist": "Massive Attack", "title": "Teardrop", "for": "surpresa", "note": "para fechar a olhar as estrelas" }
+      ]
+    }
+  ]
+}
